@@ -1,0 +1,41 @@
+# Object Computing Incorporated
+# Product: Rapid Stack
+# Author: Dorian Yeager
+# 
+# License: MIT
+ 
+version: '3'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    volumes:
+      - ./mongo/db:/data/db
+
+  flask_backend:
+    build: ../flask_apps/flask_app
+    depends_on:
+      - mongo
+    container_name: flask_backend
+    environment: 
+      - FLASK_APP=app.py
+      - FLASK_DEBUG=1
+      - LC_ALL=C.UTF-8
+      - LANG=C.UTF-8
+      - MONGODB_URI=mongodb://mongo:27017/backend
+    volumes: 
+      - ../flask_apps/flask_app/app:/app
+    working_dir: /app
+
+  nginx: 
+    image: nginx:1.16.1-alpine
+    depends_on:
+      - flask_backend 
+    container_name: nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/logs:/etc/nginx/logs
+      - ../vue_apps/vue_app/dist:/var/www/vue_app
+    ports:
+      - 80:80
+  

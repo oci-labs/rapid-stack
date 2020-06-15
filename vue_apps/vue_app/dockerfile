@@ -1,0 +1,27 @@
+FROM node:current-alpine 
+
+ENV USER=developer
+ENV UID=1000
+ENV GID=1000
+
+RUN apk update --no-cache && \
+    apk add --no-cache \
+    bash \
+    npm && \
+    npm i -g @vue/cli && \
+    deluser node && \
+    addgroup --gid "$GID" "$USER" && \
+    adduser \
+    --disabled-password \
+    --gecos "" \
+    --ingroup "$USER" \
+    --uid "$UID" \
+    "$USER" 
+
+EXPOSE 8080
+
+USER developer
+
+WORKDIR /app
+
+ENTRYPOINT [ "/bin/bash" ]
