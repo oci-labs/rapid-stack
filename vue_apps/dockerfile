@@ -8,7 +8,6 @@ RUN apk update --no-cache && \
     apk add --no-cache \
     bash \
     npm && \
-    npm i -g @vue/cli && \
     deluser node && \
     addgroup --gid "$GID" "$USER" && \
     adduser \
@@ -22,6 +21,6 @@ EXPOSE 8080
 
 USER developer
 
-WORKDIR /app
+WORKDIR /apps
 
 ENTRYPOINT [ "/bin/bash" ]

@@ -34,7 +34,7 @@ export default {
         return;
       }
       try {
-        let result = await axios.post("api/login", input);
+        let result = await axios.post("/api/login", input);
         localStorage.setItem("token", result.data.token);
         if (this.next) {
           this.$router.push(this.next);
