@@ -1,22 +1,12 @@
-/*
- Object Computing Incorporated
- Product: Rapid Stack
- Author: Dorian Yeager
- 
- License: MIT
-*/
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from './views/Home.vue'
-import About from './views/About.vue'
-import Login from './views/Login.vue'
-import Account from './views/Account.vue'
-import CreateAccount from './views/CreateAccount.vue'
-import ChangePassword from './views/ChangePassword.vue'
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/HomeView.vue'
+import Login from '../views/Login.vue'
+import Account from '../views/Account.vue'
+import CreateAccount from '../views/CreateAccount.vue'
+import ChangePassword from '../views/ChangePassword.vue'
 
-Vue.use(Router)
-
-const router = new Router({
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/createAccount',
@@ -32,15 +22,15 @@ const router = new Router({
     {
       path: '/',
       name: 'home',
-      component: Home,
-      meta: {
-        requiresAuth: true
-      }
+      component: HomeView
     },
     {
       path: '/about',
       name: 'about',
-      component: About
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/AboutView.vue')
     },
     {
       path: '/account',
@@ -59,7 +49,7 @@ const router = new Router({
       }
     },
   ]
-})
+});
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
@@ -74,6 +64,7 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
-})
+});
 
-export default router;
+
+export default router
